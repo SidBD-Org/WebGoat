@@ -3,10 +3,10 @@ name: Polaris-Bridge-Scan
 on:
   push:
     branches:
-      - main
+      - devCli
   pull_request:
     branches:
-      - main
+      - devCli
   workflow_dispatch:
 
 jobs:
