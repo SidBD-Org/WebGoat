@@ -1,4 +1,4 @@
-name: Polaris-Bridge-Scan
+name: PBS-CLI
 
 on:
   push:
