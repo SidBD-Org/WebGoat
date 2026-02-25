@@ -2,32 +2,38 @@ pipeline {
     agent any
 
     environment {
-        POLARIS_TOKEN = credentials('Sid-PolarisTkn')
+        BRIDGE_polaris_accessToken = credentials('Sid-PolarisTkn')
+        BRIDGECLI_URL = "https://repo.blackduck.com/bds-integrations-release/com/blackduck/integration/bridge/binaries/bridge-cli-bundle/latest/bridge-cli-bundle-linux64.zip"
+        POLARIS_SERVER_URL = "https://polaris.blackduck.com"
+
+        POLARIS_APPLICATION_NAME = "WebGoat"
+        POLARIS_PROJECT_NAME     = "WebGoat"
+        POLARIS_BRANCH_NAME      = "jenkins"
     }
 
     stages {
-
         stage('Checkout') {
-            steps {
-                checkout scm
-            }
+            steps { checkout scm }
         }
 
         stage('Polaris SCA Scan') {
             steps {
                 sh '''
-                echo "Downloading Polaris Bridge CLI..."
-                curl -Ls https://polaris.blackduck.com/cli/latest/bridge.sh -o bridge.sh
+                echo "Downloading Bridge CLI..."
+                curl -fLsS -o bridge.zip $BRIDGECLI_URL
 
-                echo "Making script executable..."
-                chmod +x bridge.sh
+                echo "Unzipping..."
+                unzip -qo bridge.zip -d bridgecli
+                chmod +x bridgecli/bridge-cli
 
                 echo "Running Polaris Scan..."
-                ./bridge.sh \
-                --server-url=https://polaris.blackduck.com \
-                --access-token=${POLARIS_TOKEN} \
-                --assessment-types=SCA \
-                --sca-types=SCA-PACKAGE,SCA-SIGNATURE
+                bridgecli/bridge-cli --stage polaris \
+                  polaris.serverUrl=$POLARIS_SERVER_URL \
+                  polaris.application.name=$POLARIS_APPLICATION_NAME \
+                  polaris.project.name=$POLARIS_PROJECT_NAME \
+                  polaris.branch.name=$POLARIS_BRANCH_NAME \
+                  polaris.assessment.types=SCA \
+                  polaris.sca.types=SCA-PACKAGE,SCA-SIGNATURE
                 '''
             }
         }
