@@ -1,41 +1,30 @@
-pipeline {
-    agent any
+stage('Polaris SCA Scan') {
+    steps {
+        sh '''
+        set -euo pipefail
 
-    environment {
-        BRIDGE_polaris_accessToken = credentials('Sid-PolarisTkn')
-        BRIDGECLI_URL = "https://repo.blackduck.com/bds-integrations-release/com/blackduck/integration/bridge/binaries/bridge-cli-bundle/latest/bridge-cli-bundle-linux64.zip"
-        POLARIS_SERVER_URL = "https://polaris.blackduck.com"
+        echo "Downloading Bridge CLI bundle..."
+        curl -fLsS -o bridge.zip "$BRIDGECLI_URL"
 
-        POLARIS_APPLICATION_NAME = "WebGoat"
-        POLARIS_PROJECT_NAME     = "WebGoat"
-        POLARIS_BRANCH_NAME      = "jenkins"
-    }
+        echo "Unzipping..."
+        rm -rf bridgecli && mkdir -p bridgecli
+        unzip -qo bridge.zip -d bridgecli
 
-    stages {
-        stage('Checkout') {
-            steps { checkout scm }
-        }
+        echo "Locating bridge-cli binary..."
+        BRIDGE_BIN="$(find bridgecli -type f -name bridge-cli -perm -u+x | head -n 1)"
+        if [ -z "$BRIDGE_BIN" ]; then
+          echo "ERROR: bridge-cli binary not found after unzip"; ls -R bridgecli; exit 1
+        fi
+        echo "bridge-cli found at: $BRIDGE_BIN"
 
-        stage('Polaris SCA Scan') {
-            steps {
-                sh '''
-                echo "Downloading Bridge CLI..."
-                curl -fLsS -o bridge.zip $BRIDGECLI_URL
-
-                echo "Unzipping..."
-                unzip -qo bridge.zip -d bridgecli
-                chmod +x bridgecli/bridge-cli
-
-                echo "Running Polaris Scan..."
-                bridgecli/bridge-cli --stage polaris \
-                  polaris.serverUrl=$POLARIS_SERVER_URL \
-                  polaris.application.name=$POLARIS_APPLICATION_NAME \
-                  polaris.project.name=$POLARIS_PROJECT_NAME \
-                  polaris.branch.name=$POLARIS_BRANCH_NAME \
-                  polaris.assessment.types=SCA \
-                  polaris.sca.types=SCA-PACKAGE,SCA-SIGNATURE
-                '''
-            }
-        }
+        echo "Running Polaris SCA (package + signature)..."
+        "$BRIDGE_BIN" --stage polaris \
+          polaris.serverUrl="$POLARIS_SERVER_URL" \
+          polaris.application.name="$POLARIS_APPLICATION_NAME" \
+          polaris.project.name="$POLARIS_PROJECT_NAME" \
+          polaris.branch.name="$POLARIS_BRANCH_NAME" \
+          polaris.assessment.types=SCA \
+          polaris.sca.types=SCA-PACKAGE,SCA-SIGNATURE
+        '''
     }
 }
