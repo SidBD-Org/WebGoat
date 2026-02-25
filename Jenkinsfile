@@ -14,7 +14,7 @@ pipeline {
                 sh '''
                 curl -Ls https://polaris.blackduck.com/cli/latest/bridge.sh | bash -s -- \
                 --server-url=https://polaris.blackduck.com \
-                --access-token=YOUR_POLARIS_TOKEN \
+                --access-token=${POLARIS-TOKEN} \
                 --assessment-types=SCA \
                 --sca-types=SCA-PACKAGE,SCA-SIGNATURE
                 '''
