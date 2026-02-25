@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        POLARIS_TOKEN = credentials('polaris-token')
+    }
+
     stages {
 
         stage('Checkout') {
@@ -12,9 +16,9 @@ pipeline {
         stage('Polaris SCA Scan') {
             steps {
                 sh '''
-                curl -Ls https://polaris.blackduck.com/cli/latest/bridge.sh | bash -s -- \
+                polaris scan \
                 --server-url=https://polaris.blackduck.com \
-                --access-token=${POLARIS-TOKEN} \
+                --access-token=${POLARIS_TOKEN} \
                 --assessment-types=SCA \
                 --sca-types=SCA-PACKAGE,SCA-SIGNATURE
                 '''
