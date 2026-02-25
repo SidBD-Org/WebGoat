@@ -1,24 +1,20 @@
-// Uses the Black Duck Security Scan Jenkins plugin with Polaris
-// Plugin docs: https://www.jenkins.io/doc/pipeline/steps/blackduck-security-scan/
-// Polaris + plugin usage: https://documentation.blackduck.com/bundle/bridge/page/documentation/security_scan_for_polaris.html
-
 pipeline {
     agent any
 
     environment {
-        // Your exact credential IDs:
-        // Polaris access token (Secret text)
+        // Your exact credential IDs
         POLARIS_TOKEN = credentials('Sid-PolarisTkn')
 
-        // Server & naming
+        // Polaris settings
         POLARIS_SERVER_URL       = 'https://polaris.blackduck.com'
         POLARIS_APPLICATION_NAME = 'WebGoat'
         POLARIS_PROJECT_NAME     = 'WebGoat'
     }
 
     tools {
-        maven 'maven-3'
-        jdk   'openjdk-21'
+        // Use EXACT names that exist under "Manage Jenkins → Global Tool Configuration"
+        maven 'maven-3.9.11'
+        jdk   'openjdk-17'
     }
 
     stages {
@@ -32,9 +28,9 @@ pipeline {
             }
         }
 
-        // Always run Polaris on whatever branch Jenkins checked out (e.g., "jenkins")
         stage('Polaris') {
             steps {
+                // Black Duck Security Scan plugin step (Polaris mode)
                 security_scan product: 'polaris',
                     polaris_server_url:      "${POLARIS_SERVER_URL}",
                     polaris_access_token:    "${POLARIS_TOKEN}",
@@ -42,7 +38,6 @@ pipeline {
                     polaris_application_name:"${POLARIS_APPLICATION_NAME}",
                     polaris_project_name:    "${POLARIS_PROJECT_NAME}",
                     polaris_branch_name:     "${env.BRANCH_NAME}",
-                    // Reports & behavior
                     polaris_reports_sarif_create: true,
                     mark_build_status: 'UNSTABLE',
                     include_diagnostics: false
