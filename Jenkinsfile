@@ -16,21 +16,25 @@ pipeline {
         // ... your Checkout stage ...
 
         stage('Polaris SCA Scan') {
-            steps {
-                withEnv(["JAVA_HOME=${tool 'JDK17'}", "PATH=${tool 'JDK17'}/bin:${env.PATH}"]) {
-                    sh '''
-                    echo "Downloading Polaris Bridge CLI..."
-                    curl -fL -o bridge.zip "https://sig-repo.synopsys.com/artifactory/bds-integrations-release/com/synopsys/integration/synopsys-bridge/latest/synopsys-bridge-linux64.zip"
-                    unzip -o bridge.zip
-                    chmod +x synopsys-bridge-linux64/bridge
-                    echo "Running Polaris Scan..."
-                    ./synopsys-bridge-linux64/bridge \
-                      --server-url=https://polaris.blackduck.com \
-                      --access-token=$POLARIS_TOKEN \
-                      --assessment-types=SCA
-                    '''
-                }
-            }
-        }
+    steps {
+        sh '''
+        echo "Downloading Polaris Bridge CLI..."
+
+        curl -fL -o bridge.zip "https://repo.blackduck.com/bds-integrations-release/com/synopsys/integration/bridge-cli/latest/bridge-cli-linux64.zip"
+
+        echo "Unzipping bridge..."
+        unzip -o bridge.zip
+
+        echo "Making bridge executable..."
+        chmod +x bridge-cli*/bridge-cli
+
+        echo "Running Polaris Scan..."
+        ./bridge-cli*/bridge-cli \
+            --server-url=https://polaris.blackduck.com \
+            --access-token=$POLARIS_TOKEN \
+            --assessment-types=SCA
+        '''
+    }
+}
     }
 }
