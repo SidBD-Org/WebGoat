@@ -1,23 +1,14 @@
 pipeline {
     agent any
-    tools { jdk 'JDK17' }  // <-- The name you configured in Global Tool Configuration
+    tools { 
+        jdk 'JDK17' 
+        maven 'maven-3.9.11'
+    }  // <-- The name you configured in Global Tool Configuration
 
     environment {
         POLARIS_TOKEN = credentials('prdPolarisTKN-Sid')
     }
 
-    stages {
-
-        stage('Set JAVA_HOME') {
-            steps {
-                withEnv([
-                    "JAVA_HOME=${tool 'JDK17'}",
-                    "PATH=${tool 'JDK17'}/bin:${env.PATH}"
-                ]) {
-                    sh 'java -version'
-                }
-            }
-        }
 
         // ... your Checkout stage ...
 
