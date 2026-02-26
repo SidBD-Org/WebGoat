@@ -1,7 +1,6 @@
 pipeline {
-    agent any
-
-    environment {
+       environment {    agent any
+        // Must match exactly your Jenkins credential ID
         POLARIS_TOKEN = credentials('prdPolarisTKN-Sid')
     }
 
@@ -12,15 +11,18 @@ pipeline {
                 checkout scm
             }
         }
-        
+
         stage('Polaris SCA Scan') {
             steps {
                 sh '''
                 echo "Downloading Polaris Bridge CLI..."
-                curl -Ls https://polaris.blackduck.com/cli/latest/bridge.sh -o bridge.sh
+
+                curl -L -o bridge.sh https://detect.blackduck.com/bridge.sh
+
                 chmod +x bridge.sh
 
                 echo "Running Polaris Scan..."
+
                 bash bridge.sh \
                 --server-url=https://polaris.blackduck.com \
                 --access-token=$POLARIS_TOKEN \
