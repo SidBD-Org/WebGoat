@@ -15,22 +15,26 @@ pipeline {
         }
 
         stage('Polaris SCA Scan') {
-            steps {
-                sh '''
-                echo "Downloading Polaris Bridge CLI..."
+    steps {
+        sh '''
+        echo "Downloading Polaris Bridge CLI..."
 
-                curl -fLsS -o bridge.zip $BRIDGECLI_LINUX64 && unzip -qo -d $WORKSPACE_TMP bridge.zip && rm -f bridge.zip
+        curl -fL -o bridge.zip "https://sig-repo.synopsys.com/artifactory/bds-integrations-release/com/synopsys/integration/synopsys-bridge/latest/synopsys-bridge-linux64.zip"
 
-                chmod +x bridge.sh
+        echo "Unzipping bridge..."
+        unzip -o bridge.zip
 
-                echo "Running Polaris Scan..."
+        echo "Making bridge executable..."
+        chmod +x synopsys-bridge-linux64/bridge
 
-                bash bridge.sh \
-                --server-url=https://polaris.blackduck.com \
-                --access-token=$POLARIS_TOKEN \
-                --assessment-types=SCA
-                '''
-            }
-        }
+        echo "Running Polaris Scan..."
+
+        ./synopsys-bridge-linux64/bridge \
+        --server-url=https://polaris.blackduck.com \
+        --access-token=$POLARIS_TOKEN \
+        --assessment-types=SCA
+        '''
+    }
+}
     }
 }
