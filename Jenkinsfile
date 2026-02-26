@@ -1,40 +1,36 @@
 pipeline {
     agent any
-
+    tools { jdk 'JDK17' }  // <-- The name you configured in Global Tool Configuration
     environment {
-        // Must match exactly your Jenkins credential ID
         POLARIS_TOKEN = credentials('prdPolarisTKN-Sid')
     }
-
     stages {
-
-        stage('Checkout') {
+        stage('Set JAVA_HOME') {
             steps {
-                checkout scm
+                withEnv(["JAVA_HOME=${tool 'JDK17'}", "PATH=${tool 'JDK17'}/bin:${env.PATH}"]) {
+                    sh 'java -version'
+                }
             }
         }
 
+        // ... your Checkout stage ...
+
         stage('Polaris SCA Scan') {
-    steps {
-        sh '''
-        echo "Downloading Polaris Bridge CLI..."
-
-        curl -fL -o bridge.zip "https://sig-repo.synopsys.com/artifactory/bds-integrations-release/com/synopsys/integration/synopsys-bridge/latest/synopsys-bridge-linux64.zip"
-
-        echo "Unzipping bridge..."
-        unzip -o bridge.zip
-
-        echo "Making bridge executable..."
-        chmod +x synopsys-bridge-linux64/bridge
-
-        echo "Running Polaris Scan..."
-
-        ./synopsys-bridge-linux64/bridge \
-        --server-url=https://polaris.blackduck.com \
-        --access-token=$POLARIS_TOKEN \
-        --assessment-types=SCA
-        '''
-    }
-}
+            steps {
+                withEnv(["JAVA_HOME=${tool 'JDK17'}", "PATH=${tool 'JDK17'}/bin:${env.PATH}"]) {
+                    sh '''
+                    echo "Downloading Polaris Bridge CLI..."
+                    curl -fL -o bridge.zip "https://sig-repo.synopsys.com/artifactory/bds-integrations-release/com/synopsys/integration/synopsys-bridge/latest/synopsys-bridge-linux64.zip"
+                    unzip -o bridge.zip
+                    chmod +x synopsys-bridge-linux64/bridge
+                    echo "Running Polaris Scan..."
+                    ./synopsys-bridge-linux64/bridge \
+                      --server-url=https://polaris.blackduck.com \
+                      --access-token=$POLARIS_TOKEN \
+                      --assessment-types=SCA
+                    '''
+                }
+            }
+        }
     }
 }
