@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        POLARIS_TOKEN = credentials('Sid-PolarisTkn')
+        POLARIS_TOKEN = credentials('prdPolarisTKN-Sid')
     }
 
     stages {
