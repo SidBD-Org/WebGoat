@@ -12,7 +12,7 @@ pipeline {
                 checkout scm
             }
         }
-
+        
         stage('Polaris SCA Scan') {
             steps {
                 sh '''
