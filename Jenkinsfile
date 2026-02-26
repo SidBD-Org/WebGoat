@@ -1,6 +1,7 @@
 pipeline {
+    agent any
+
     environment {
-        agent any
         // Must match exactly your Jenkins credential ID
         POLARIS_TOKEN = credentials('prdPolarisTKN-Sid')
     }
