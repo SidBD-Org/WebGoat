@@ -3,14 +3,11 @@ pipeline {
     tools { 
         jdk 'JDK17' 
         maven 'maven-3.9.11'
-    }  // <-- The name you configured in Global Tool Configuration
+    } 
 
     environment {
         POLARIS_TOKEN = credentials('prdPolarisTKN-Sid')
     }
-
-
-        // ... your Checkout stage ...
 
         stage('Polaris SCA Scan') {
             steps {
