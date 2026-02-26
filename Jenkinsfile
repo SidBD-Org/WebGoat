@@ -19,7 +19,7 @@ pipeline {
                 sh '''
                 echo "Downloading Polaris Bridge CLI..."
 
-                curl -L -o bridge.sh https://detect.blackduck.com/bridge.sh
+                curl -fLsS -o bridge.zip $BRIDGECLI_LINUX64 && unzip -qo -d $WORKSPACE_TMP bridge.zip && rm -f bridge.zip
 
                 chmod +x bridge.sh
 
