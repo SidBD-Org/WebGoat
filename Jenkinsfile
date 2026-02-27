@@ -11,7 +11,7 @@ pipeline {
 
         stage('Polaris SCA Scan') {
             steps {
-                sh '''
+                sh './mvnw clean install -DskipTests'
                 echo "Downloading Polaris Bridge CLI..."
 
                 curl -fL -o bridge.zip "https://repo.blackduck.com/bds-integrations-release/com/synopsys/integration/bridge-cli/latest/bridge-cli-linux64.zip"
