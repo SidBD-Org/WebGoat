@@ -3,10 +3,10 @@ name: PBS-CLI
 on:
   push:
     branches:
-      - devCli
+      - jenkins
   pull_request:
     branches:
-      - devCli
+      - jenkins
   workflow_dispatch:
 
 jobs:
