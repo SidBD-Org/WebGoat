@@ -1,29 +1,18 @@
 pipeline {
     agent any
 
-    tools {
-        jdk 'openjdk-25'
-        maven 'maven-3.9.11'
-    }
-
     environment {
+        JAVA_HOME = '/usr/lib/jvm/java-25-openjdk'
+        PATH = "${JAVA_HOME}/bin:${env.PATH}"
         POLARIS_TOKEN = credentials('prdPolarisTKN-Sid')
     }
 
     stages {
 
-        stage('Verify Java 25') {
+        stage('Verify Java') {
             steps {
-                sh 'echo "JAVA_HOME=$JAVA_HOME"'
+                sh 'echo JAVA_HOME=$JAVA_HOME'
                 sh 'java -version'
-            }
-        }
-
-        stage('Debug JDK Folder') {
-            steps {
-                sh 'echo "Listing JDK tool directory..."'
-                sh 'ls -l /var/lib/jenkins/tools/hudson.model.JDK/'
-                sh 'ls -l /var/lib/jenkins/tools/hudson.model.JDK/openjdk-25'
             }
         }
 
@@ -43,7 +32,7 @@ pipeline {
             }
         }
 
-        stage('Run Polaris Scan (SAST + SCA)') {
+        stage('Run Polaris Scan') {
             steps {
                 sh '''
                     ./bridge-cli*/bridge-cli \
