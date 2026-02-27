@@ -26,7 +26,7 @@ pipeline {
                 ./bridge-cli*/bridge-cli \
                     --server-url=https://polaris.blackduck.com \
                     --access-token=$POLARIS_TOKEN \
-                    --assessment-types=SCA
+                    --assessment-types=SAST,SCA
                 '''
             }
         }
