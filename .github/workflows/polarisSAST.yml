@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: '25'
 
       - name: Setup Maven
         run: mvn -version
@@ -42,4 +42,4 @@ jobs:
           polaris.project.name=WebGoat-JENKINS-test \
           polaris.branch.name=jenkins \
           polaris.assessment.types=SAST \
-          coverity.build.command="mvn -pl webgoat-server clean install -DskipTests"
+          coverity.build.command="./mvnw clean install -DskipTests"
