@@ -38,6 +38,7 @@ jobs:
           --stage polaris \
           polaris.serverUrl=$POLARIS_SERVER_URL \
           polaris.accessToken=$POLARIS_ACCESS_TOKEN \
+          polaris.application.name=Test \
           polaris.project.name=WebGoat-JENKINS-test \
           polaris.branch.name=jenkins \
           polaris.assessment.types=SAST \
