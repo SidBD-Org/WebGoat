@@ -42,4 +42,5 @@ jobs:
           polaris.project.name=WebGoat-JENKINS-test \
           polaris.branch.name=jenkins \
           polaris.assessment.types=SAST \
+          polaris.test.sast.mode=rapid \
           coverity.build.command="mvn clean install -DskipTests"
