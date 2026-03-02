@@ -38,8 +38,9 @@ jobs:
           --stage polaris \
           polaris.serverUrl=$POLARIS_SERVER_URL \
           polaris.accessToken=$POLARIS_ACCESS_TOKEN \
-          polaris.application.name=WebGoat \
-          polaris.project.name=WebGoat \
+          polaris.application.name=WebGoat-JENKINS-test \
+          polaris.project.name=WebGoat-JENKINS-test \
           polaris.branch.name=jenkins \
           polaris.assessment.types=SAST \
+          polaris.onboarding=false \
           coverity.build.command="mvn clean install -DskipTests"
