@@ -43,4 +43,3 @@ jobs:
           polaris.branch.name=jenkins \
           polaris.assessment.types=SAST \
           coverity.build.command="./mvnw clean install -DskipTests"
-          
