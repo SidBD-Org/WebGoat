@@ -41,6 +41,7 @@ jobs:
           polaris.application.name=KEMCHOTEST \
           polaris.project.name=WebGoat23-JENtest \
           polaris.branch.name=jenkins \
-          polaris.assessment.types=SAST \
+          polaris.assessment.types=SAST,SCA \
+          polaris.test.sca.type=SCA-PACKAGE,SCA-SIGNATURE \
           coverity.build.command="./mvnw clean install -DskipTests"
           
