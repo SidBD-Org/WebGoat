@@ -38,8 +38,8 @@ jobs:
           --stage polaris \
           polaris.serverUrl=$POLARIS_SERVER_URL \
           polaris.accessToken=$POLARIS_ACCESS_TOKEN \
-          polaris.application.name=KEMCHO TEST \
-          polaris.project.name=WebGoat23-JENKINS KC test \
+          polaris.application.name=KEMCHOTEST \
+          polaris.project.name=WebGoat23-JENtest \
           polaris.branch.name=jenkins \
           polaris.assessment.types=SAST \
           coverity.build.command="./mvnw clean install -DskipTests"
